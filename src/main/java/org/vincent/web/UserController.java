@@ -1,6 +1,10 @@
 package org.vincent.web;
 
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,15 +15,13 @@ import org.vincent.dao.model.User;
 import org.vincent.dao.service.UserService;
 import org.vincent.web.out.JsonResult;
 
-import java.util.List;
-
 /**
  * Created by PengRong on 2018/9/18.
  */
 
 @RestController
 public class UserController {
-
+    private Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
 
@@ -34,13 +36,18 @@ public class UserController {
         try {
             User user = userService.getUserById(id);
             r.setResult(user);
-            r.setStatus("ok");
+            r.setStatus("OK");
         } catch (Exception e) {
             r.setResult(e.getClass().getName() + ":" + e.getMessage());
             r.setStatus("error");
             e.printStackTrace();
         }
-        return ResponseEntity.ok(r);
+        logger.debug(r.toString());
+        /** 设置 header */
+        ResponseEntity.BodyBuilder builder=ResponseEntity.ok();
+        builder.header(HttpHeaders.ACCEPT_ENCODING,"gzip, deflate, br");
+        /** 设置body 数据返回*/
+        return builder.body(r);
     }
 
     /**
