@@ -4,6 +4,7 @@ import java.util.Date;
 
 /**
  * Created by PengRong on 2018/9/18.
+ * 对应数据库中的表，类名不需要和表名一致
  */
 public class User {
 
