@@ -1,4 +1,4 @@
-package org.vincent.web;
+package org.vincent.web.controller;
 
 import java.util.List;
 import org.slf4j.Logger;

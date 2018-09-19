@@ -1,26 +1,22 @@
 package org.vincent;
 
 import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author PengRong
+ * Spring boot 启动入口 main 函数
  */
-@RestController
 @SpringBootApplication
 @MapperScan("org.vincent.dao.mapper")
 public class SpringBootInActionApplication {
 
-	@RequestMapping("/")
-	@ResponseBody
-	String index() {
-		return "Hello Spring Boot";
-	}
-	public static void main(String[] args) {
-		SpringApplication.run(SpringBootInActionApplication.class, args);
-	}
+    private static Logger logger = LoggerFactory.getLogger(SpringBootInActionApplication.class);
+    public static void main(String[] args) {
+        logger.debug("start spring boot");
+        SpringApplication.run(SpringBootInActionApplication.class, args);
+    }
 }
