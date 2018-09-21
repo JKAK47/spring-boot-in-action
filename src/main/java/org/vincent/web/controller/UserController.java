@@ -1,6 +1,5 @@
 package org.vincent.web.controller;
 
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.vincent.dao.model.User;
-import org.vincent.dao.service.UserService;
+import org.vincent.dao.impl.TbUserMapper;
+import org.vincent.dao.model.TbUser;
+import org.vincent.dao.model.TbUserExample;
 import org.vincent.web.out.JsonResult;
+import org.vincent.web.vo.User;
+
+import java.util.List;
 
 /**
  * Created by PengRong on 2018/9/18.
@@ -23,7 +26,7 @@ import org.vincent.web.out.JsonResult;
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
-    private UserService userService;
+    private TbUserMapper userService;
 
     /**
      * 根据ID查询用户
@@ -34,7 +37,8 @@ public class UserController {
     public ResponseEntity<JsonResult> getUserById (@PathVariable(value = "id") Integer id){
         JsonResult r = new JsonResult();
         try {
-            User user = userService.getUserById(id);
+
+            TbUser user = userService.selectByPrimaryKey(id);
             r.setResult(user);
             r.setStatus("OK");
         } catch (Exception e) {
@@ -58,7 +62,9 @@ public class UserController {
     public ResponseEntity<JsonResult> getUserList (){
         JsonResult r = new JsonResult();
         try {
-            List<User> users = userService.getUserList();
+            TbUserExample example=new TbUserExample();
+            example.createCriteria();
+            List<TbUser> users = userService.selectByExample(example);
             r.setResult(users);
             r.setStatus("ok");
         } catch (Exception e) {
@@ -78,10 +84,14 @@ public class UserController {
     public ResponseEntity<JsonResult> add (@RequestBody User user){
         JsonResult r = new JsonResult();
         try {
-            int orderId = userService.add(user);
+            TbUser tbUser=new TbUser();
+            tbUser.setAge(user.getAge());
+            tbUser.setCtm(user.getCtm());
+            tbUser.setUsername(user.getUsername());
+            int orderId = userService.insert(tbUser);
             if (orderId < 0) {
                 r.setResult(orderId);
-                r.setStatus("fail");
+                r.setStatus("fail ");
             } else {
                 r.setResult(orderId);
                 r.setStatus("ok");
@@ -104,10 +114,10 @@ public class UserController {
     public ResponseEntity<JsonResult> delete (@PathVariable(value = "id") Integer id){
         JsonResult r = new JsonResult();
         try {
-            int ret = userService.delete(id);
+            int ret = userService.deleteByPrimaryKey(id);
             if (ret < 0) {
                 r.setResult(ret);
-                r.setStatus("fail");
+                r.setStatus(" fail");
             } else {
                 r.setResult(ret);
                 r.setStatus("ok");
@@ -130,9 +140,15 @@ public class UserController {
     public ResponseEntity<JsonResult> update (@PathVariable("id") Integer id, @RequestBody User user){
         JsonResult r = new JsonResult();
         try {
-            int ret = userService.update(id, user);
+            TbUser tbUser=new TbUser();
+            tbUser.setId(id);
+            tbUser.setUsername(user.getUsername());
+            tbUser.setCtm(user.getCtm());
+            tbUser.setAge(user.getAge());
+
+            int ret = userService.updateByPrimaryKey(tbUser);
             if (ret < 0) {
-                r.setResult(ret);
+                r.setResult(ret+"");
                 r.setStatus("fail");
             } else {
                 r.setResult(ret);

@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Spring boot 启动入口 main 函数
  */
 @SpringBootApplication
-@MapperScan("org.vincent.dao.mapper")
+@MapperScan("org.vincent.dao.impl")
 public class SpringBootInActionApplication {
 
     private static Logger logger = LoggerFactory.getLogger(SpringBootInActionApplication.class);
