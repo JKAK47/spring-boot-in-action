@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration  scan="true" scanPeriod="60 seconds" debug="false">
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
     <contextName>logback</contextName>
     <!-- property标签的 name的值是变量的名称，value的值时变量定义的值。通过定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。 -->
     <!-- 设置所有日志保存的目录  -->
-    <property name="log.path" value="${user.home}/../../app/service/spring-boot-in-action/logs" />
-
-    <!-- 彩色日志 -->
+    <property name="log.path" value="${user.home}/../../app/service/spring-boot-in-action/logs"/>
+    <property name="log.charset" value="UTF-8" />
+    !--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符
+        定义几个模式字符串
+    -->
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n" />
+    <property name="log.pattern.short" value="%date{yyyyMMdd HH:mm:ss.SSS}-%msg%n" />
+    <!-- 彩色日志 配置 开始 -->
     <!-- 彩色日志依赖的渲染类 -->
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
-    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
-    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
     <!-- 彩色日志格式 -->
-    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <!-- 彩色日志 配置 结束 -->
 
     <!--输出到控制台-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-      <!--  <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>debug</level>
-        </filter>-->
+        </filter>
         <encoder>
             <!--<pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>-->
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
@@ -26,12 +35,16 @@
         </encoder>
     </appender>
 
-    <!--输出到文件-->
+    <!--输出到文件 level为 DEBUG 日志-->
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/log.log</file>
+        <file>${log.path}/log_debug.log</file>
+        <!--日志文件最大的大小-->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+        <!-- 日志生成策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/log.%d{yyyy-MM-dd}.zip</fileNamePattern>
-            <!--<maxFileSize>100MB</maxFileSize>-->
+            <fileNamePattern>${log.path}/log_debug.%d{yyyy-MM-dd}.zip</fileNamePattern>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
         </rollingPolicy>
@@ -78,17 +91,25 @@
         </encoder>
     </appender>
 
+    <!--myibatis log configure-->
+    <!--配置mybatis输出语句包-->
+    <logger name="com.apache.ibatis" level="TRACE"/>
+    <logger name="java.sql.Connection" level="DEBUG"/>
+    <logger name="java.sql.Statement" level="DEBUG"/>
+    <logger name="java.sql.PreparedStatement" level="DEBUG"/>
 
-
-    <logger name="com.chinalife.proposal.web.handler"
+    <!--<logger name="com.chinalife.proposal.web.handler"
             level="ERROR" additivity="false">
         <appender-ref ref="error"/>
-        <appender-ref ref="console" />
-    </logger>
+        <appender-ref ref="console"/>
+    </logger>-->
 
     <root level="INFO">
-        <appender-ref ref="console" />
-        <appender-ref ref="file" />
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+        <appender-ref ref="access"/>
+        <appender-ref ref="mqConsumer"/>
+        <appender-ref ref="error"/>
     </root>
 
 </configuration>
