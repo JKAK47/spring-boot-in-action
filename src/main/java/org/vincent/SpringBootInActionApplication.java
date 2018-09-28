@@ -8,10 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @author PengRong
- * Spring boot 启动入口 main 函数
+ * Spring boot 启动入口 main 函数;
+ * MapperScan 注解 通过 {} 可以扫描多个package下的mapper， 如果只有一个package @MapperScan("org.vincent.dao.impl")
  */
 @SpringBootApplication
-@MapperScan("org.vincent.dao.impl")
+@MapperScan({"org.vincent.dao.impl","org.vincent.dao.imapper"})
 public class SpringBootInActionApplication {
 
     private static Logger logger = LoggerFactory.getLogger(SpringBootInActionApplication.class);
