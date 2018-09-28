@@ -11,6 +11,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * Created by PengRong on 2018/9/28.
  * Swagger2 配置 类
@@ -54,10 +56,10 @@ public class Swagger2 {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title(title)
-                .description(description)
+                .title(new String(title.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8))
+                .description(new String(description.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8))
                 .termsOfServiceUrl("localhost:"+serverPort+"/spring-boot-in-action/")
-                .version(version)
+                .version(new String(version.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8))
                 .build();
     }
 
