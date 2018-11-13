@@ -23,6 +23,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <swagger2.version>2.6.1</swagger2.version>
+        <appName>springboot-in-action</appName>
     </properties>
 
     <dependencies>
@@ -74,6 +75,7 @@
     </dependencies>
 
     <build>
+        <finalName>${appName}</finalName>
         <!--
              maven默认会把src/main/resources下的所有配置文件以及src/main/java下的所有java文件打包或发布到target\classes下面，
              但是现实我们可能会在src/main/java下面也放置一些配置文件如hibernate配置文件或mybatis mapper配置文件等，
