@@ -58,6 +58,15 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.38</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mybatis.generator/mybatis-generator-core
+            mybatis generator 生成数据bean dao代码框架
+         -->
+       <!-- <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>1.3.7</version>
+        </dependency>-->
+
         <!-- mysql + mybatis-boot -->
 
         <!-- swagger 2 begin -->
@@ -94,10 +103,12 @@
         </resources>
 
         <plugins>
+            <!-- 编译插件 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!-- 编译跳过测试案例-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -109,7 +120,7 @@
             <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
-                <version>1.3.5</version>
+                <version>1.3.7</version>
                 <dependencies>
                     <!-- 去除pom文件中引用的 mysql驱动版本,驱动版本 用6.0.x 版本 用这个脚本会生成很多无关的表 -->
                     <dependency>
@@ -123,9 +134,9 @@
                     <verbose>true</verbose>
                     <!-- 是否覆盖 -->
                     <overwrite>true</overwrite>
-                    <!-- 自动生成的配置 -->
+                    <!--configurationFile节点指定了mybatis generator配置文件的路径, 用于自动生成dao的配置 -->
                     <configurationFile>
-                        src/main/resources/mybatis-generator.xml
+                        ${basedir}/src/main/resources/mybatis-generator.xml
                     </configurationFile>
                 </configuration>
             </plugin>
