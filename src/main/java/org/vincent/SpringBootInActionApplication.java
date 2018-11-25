@@ -1,19 +1,25 @@
 package org.vincent;
 
+import com.google.common.io.Resources;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.Assert;
 import org.vincent.common.util.DiretoryUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.util.Properties;
 
 /**
  * @author PengRong
@@ -42,14 +48,20 @@ public class SpringBootInActionApplication {
         /**
          * 读取jar包里面的文件
          */
-        logger.error("jarUrl--="+jarUrl.toString()+"!/resources/config/application-test.properties");
-        jarUrl=new URL(jarUrl.toString()+"!/resources/config/application-test.properties");
+        logger.error("jarUrl--=" + jarUrl.toString() + "!/resources/config/test.properties");
+        jarUrl = new URL(jarUrl.toString() + "!/resources/config/application-test.properties");
         logger.error(jarUrl.toString());
-        InputStream inputStream =jarUrl.openStream();
-        Assert.notNull(inputStream,"inputStream is not null");
+        InputStream inputStream = jarUrl.openStream();
+        Assert.notNull(inputStream, "inputStream is not null");
+        /** 这样可以读取但是不能获取到值: Caused by: java.lang.IllegalArgumentException: Malformed "\ uxxxx" encoding.*/
         logger.error(inputStream.toString());
-        // URL url = new URL("jar:file" + path + "!/resources/config/application-test.properties");
+       /* Properties properties = new Properties();
+        properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+        String dateBaseUrl = properties.getProperty("spring.datasource.url","null String");
+        System.out.println(dateBaseUrl);*/
+
+       // URL url = new URL("jar:file" + path + "!/resources/config/application-test.properties");
         // System.out.println(url);
-        logger.error("jarPath="+ DiretoryUtils.getJarDiretory());
+        logger.error("jarPath=" + DiretoryUtils.getJarDiretory());
     }
 }
