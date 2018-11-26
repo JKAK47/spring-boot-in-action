@@ -3,8 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <!-- 进行Mybatis的相应的环境的属性定义 -->
+    <!-- 进行Mybatis的相应的环境的属性定义 配置文件 -->
     <settings>    <!-- 在本项目之中开启二级缓存 -->
         <setting name="cacheEnabled" value="true"/>
+        <!-- 指定日志实现 不支持设置 LOGBACK -->
+        <!--<setting name="logImpl" value="COMMONS_LOGGING"/>-->
     </settings>
 </configuration>

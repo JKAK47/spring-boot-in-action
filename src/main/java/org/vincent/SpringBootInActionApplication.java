@@ -34,34 +34,5 @@ public class SpringBootInActionApplication {
     public static void main(String[] args) throws IOException {
         logger.debug("start spring boot");
         SpringApplication.run(SpringBootInActionApplication.class, args);
-        /**
-         * 下面是测试方法
-         */
-        String path = SpringBootInActionApplication.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        logger.error(path);
-        path = URLDecoder.decode(path, "UTF-8");
-        logger.error(path);
-        URL jarUrl = SpringBootInActionApplication.class.getProtectionDomain().getCodeSource().getLocation();
-        /** jar包classpath 所在路径  jar:file:/D:/Dev/WorkStation/OneLife/spring-boot-in-action/target/springboot-in-action.jar!/BOOT-INF/classes!/  */
-        logger.error(jarUrl.toString());
-
-        /**
-         * 读取jar包里面的文件
-         */
-        logger.error("jarUrl--=" + jarUrl.toString() + "!/resources/config/test.properties");
-        jarUrl = new URL(jarUrl.toString() + "!/resources/config/application-test.properties");
-        logger.error(jarUrl.toString());
-        InputStream inputStream = jarUrl.openStream();
-        Assert.notNull(inputStream, "inputStream is not null");
-        /** 这样可以读取但是不能获取到值: Caused by: java.lang.IllegalArgumentException: Malformed "\ uxxxx" encoding.*/
-        logger.error(inputStream.toString());
-       /* Properties properties = new Properties();
-        properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
-        String dateBaseUrl = properties.getProperty("spring.datasource.url","null String");
-        System.out.println(dateBaseUrl);*/
-
-       // URL url = new URL("jar:file" + path + "!/resources/config/application-test.properties");
-        // System.out.println(url);
-        logger.error("jarPath=" + DiretoryUtils.getJarDiretory());
     }
 }
