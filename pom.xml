@@ -121,7 +121,16 @@
             <version>${swagger2.version}</version>
         </dependency>
         <!-- swagger 2 stop -->
+        <!-- cache begin -->
+        <!-- redis begin -->
+        <!-- 整合redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
+        <!-- redis stop -->
+        <!-- cache stop -->
     </dependencies>
 
     <build>

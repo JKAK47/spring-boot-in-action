@@ -33,3 +33,12 @@
 
 
 # SpringBoot 2.0.x swagger 集成 配置 
+
+
+# SpringBoot2.0.x Redis集成配置
+
+[SpringBoot 2.x之使用Redis](https://blog.csdn.net/code_shadow/article/details/81277245)
+
+[SpringBoot(六)：SpringBoot整合Redis](https://blog.csdn.net/plei_yue/article/details/79362372)
+
+[SpringBoot+Redis缓存简单配置](https://blog.csdn.net/wxgxgp/article/details/81699031)
