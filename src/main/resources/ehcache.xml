@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- ehcache 2.x 版本； 不持久化 值缓存数据在JVM 中  -->
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true" monitoring="autodetect" dynamicConfig="true">
+    <!-- 定义磁盘缓存路径, 不用持久化只需要注释 diskStore 元素即可-->
+    <!-- <diskStore path="java.io.tmpdir/iModule-proposal-service/ehcache"/>   -->
+    <!--
+     eternal：true表示对象永不过期，此时会忽略timeToIdleSeconds和timeToLiveSeconds属性，默认为false
+     diskSpoolBufferSizeMB： 磁盘缓存区大小MB
+     overflowToDisk：true表示当内存缓存的对象数目达到了maxElementsInMemory界限后，会把溢出的对象写到硬盘缓存中，对象必须实现了Serializable接口;false 不进行缓存
+     memoryStoreEvictionPolicy：当达到maxElementsInMemory限制时，Ehcache将会根据指定的策略去清理内存
+     diskExpiryThreadIntervalSeconds：磁盘失效线程运行时间间隔，默认为120秒
+     maxElementsInMemory：内存中最大缓存对象数
+     timeToIdleSeconds :緩存空闲最长时间
+     timeToLiveSeconds： 缓存在JVM存活时间,需要设置大于  timeToIdleSeconds
+      -->
+    <defaultCache
+            maxEntriesLocalHeap="1000"
+            maxElementsInMemory="3000"
+            eternal="false"
+            overflowToDisk="false"
+            timeToIdleSeconds="3600"
+            timeToLiveSeconds="36000"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU">
+        <!-- <persistence strategy="localTempSwap"/>   -->
+    </defaultCache>
+    <!-- proposalCache 缓存 -->
+    <cache name="demo"
+           maxEntriesLocalHeap="1000"
+           maxElementsInMemory="1000"
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="36000"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"
+           transactionalMode="off">
+        <!-- <persistence strategy="localTempSwap"/>   -->
+    </cache>
+    <!-- helloworld缓存 -->
+    <!-- <cache name="HelloWorldCache"
+          maxEntriesLocalHeap="1000"
+         maxElementsInMemory="1000"
+         eternal="false"
+         timeToIdleSeconds="5"
+         timeToLiveSeconds="5"
+         overflowToDisk="false"
+         memoryStoreEvictionPolicy="LRU"/> -->
+</ehcache>

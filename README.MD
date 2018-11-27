@@ -42,3 +42,8 @@
 [SpringBoot(六)：SpringBoot整合Redis](https://blog.csdn.net/plei_yue/article/details/79362372)
 
 [SpringBoot+Redis缓存简单配置](https://blog.csdn.net/wxgxgp/article/details/81699031)
+
+# SpringBoot 2.0.x 集成 redis Ehcache 
+[Spring Boot 集成 Redis Cache 和 EhCache Cache](http://tramp.cincout.cn/2017/10/31/spring-boot-2017-10-31-spring-boot-multi-cache-manager/)
+
+[【spring-boot】spring-boot整合ehcache实现缓存机制](http://www.cnblogs.com/lic309/p/4072848.html)
