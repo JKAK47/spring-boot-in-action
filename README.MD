@@ -56,3 +56,6 @@
 # SpringBoot 2.0.x 集成 redis Ehcache 
 [Spring Boot 集成 Redis Cache 和 EhCache Cache](http://tramp.cincout.cn/2017/10/31/spring-boot-2017-10-31-spring-boot-multi-cache-manager/)
 
+[Spring Boot中的缓存支持（一）注解配置与EhCache使用](https://blog.csdn.net/baochanghong/article/details/54135800)
+
+[注释驱动的 Spring cache 缓存介绍](https://www.ibm.com/developerworks/cn/opensource/os-cn-spring-cache/)
