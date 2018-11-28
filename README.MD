@@ -43,7 +43,16 @@
 
 [SpringBoot+Redis缓存简单配置](https://blog.csdn.net/wxgxgp/article/details/81699031)
 
+[RedisTemplate的各种操作（set、map、list、value 代码形式）](https://blog.csdn.net/lichuangcsdn/article/details/80866182)
+
+[redis注解开发详解](https://blog.csdn.net/wgxaszc8/article/details/68924779)
+
+[Spring Boot 基于注解的 Redis 缓存使用](https://blog.csdn.net/catoop/article/details/71275350)
+
+# SpringBoot 2.0.x 集成 Ehcache
+
+[【spring-boot】spring-boot整合ehcache实现缓存机制](http://www.cnblogs.com/lic309/p/4072848.html)
+
 # SpringBoot 2.0.x 集成 redis Ehcache 
 [Spring Boot 集成 Redis Cache 和 EhCache Cache](http://tramp.cincout.cn/2017/10/31/spring-boot-2017-10-31-spring-boot-multi-cache-manager/)
 
-[【spring-boot】spring-boot整合ehcache实现缓存机制](http://www.cnblogs.com/lic309/p/4072848.html)

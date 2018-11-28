@@ -31,7 +31,6 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 
@@ -39,10 +38,15 @@ import java.time.Duration;
 
 /**
  * Created by PengRong on 2018/11/26.
+ * Redis 单机版配置
  */
 @Configuration
 @EnableCaching
 public class RedisConfiguration extends CachingConfigurerSupport {
+    /** Redis 的 CacheManager bean 名称 */
+    public static final String REDIS_CACHE_MANAGER = "redisCacheManager";
+    /** Ehcache 设定的默认cache 名称 ; 和ehcache 配置文件设置的 cache 名称一致 */
+    public static final String REDIS_CACHE_NAME = "redisCache";
     /**
      * Logger
      */
@@ -92,7 +96,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
      * @return
      */
     @Override
-    @Bean
+    @Bean(name = "redisKeyGenerator")
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
             StringBuilder sb = new StringBuilder();
@@ -105,7 +109,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         };
     }
 
-    // 设置默认的cacheManager
+    // 设置redis的cacheManager
     @Bean(name = "redisCacheManager")
     public RedisCacheManager cacheManager(JedisConnectionFactory connectionFactory) {
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
@@ -119,6 +123,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
                 .transactionAware()
                 .build();
 
+        redisCacheManager.afterPropertiesSet();
         return redisCacheManager;
     }
 
@@ -128,7 +133,10 @@ public class RedisConfiguration extends CachingConfigurerSupport {
 
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
+        RedisSerializer stringSerializer = new StringRedisSerializer();
+        redisTemplate.setKeySerializer(stringSerializer);// key 序列化, 必须设置不然key 乱码
 
+        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 
@@ -182,34 +190,48 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         private long maxWaitMillis;
         @Value("${spring.redis.jedis.pool.max-active}")
         private int maxActive;
-        @Bean
-        JedisConnectionFactory jedisConnectionFactory() {
-            lg.info("Create JedisConnectionFactory successful");
-            /*JedisClientConfiguration jedisClientConfiguration = JedisClientConfiguration.builder().readTimeout(Duration.ofMillis(timeout)).connectTimeout(Duration.ofMillis(timeout)).build();
 
+        /**
+         * 用于创建链接单个 redis 实例的  JedisConnectionFactory
+         * @return
+         */
+        @Bean
+        JedisConnectionFactory jedisConnectionFactory(JedisPoolConfig jedisPoolConfig) {
+            lg.info("Create JedisConnectionFactory successful");
+            /**
+             * 配置 jedis 客户端功能配置
+             */
+            JedisClientConfiguration jedisClientConfiguration = JedisClientConfiguration.builder().
+                    readTimeout(Duration.ofMillis(timeout)).connectTimeout(Duration.ofMillis(timeout)).usePooling()
+                    .poolConfig(jedisPoolConfig).build();
+
+            /**用于配置创建Redis 链接 的设置  */
             RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
             configuration.setHostName(host);
             configuration.setPort(port);
+            configuration.setPassword(RedisPassword.of(password));
 
-            configuration.setPassword(RedisPassword.of(password));*/
-            JedisConnectionFactory factory = new JedisConnectionFactory();
-
-            factory.setHostName(host);
-            factory.setPort(port);
-            factory.setTimeout(timeout);
-            factory.setPassword(password);
+            /** Jedis ConnectionFactory */
+            JedisConnectionFactory factory = new JedisConnectionFactory(configuration,jedisClientConfiguration);
             return factory;
         }
 
+        /**
+         * 设置JedisPool 线程池 配置 类
+         * @return
+         */
         @Bean
-        public JedisPool redisPoolFactory() {
+        public JedisPoolConfig redisPoolConfig() {
             lg.info("JedisPool init successful，host -> [{}]；port -> [{}]", host, port);
             JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
             jedisPoolConfig.setMaxIdle(maxIdle);
             jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
             jedisPoolConfig.setMaxTotal(maxActive);
-            JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
-            return jedisPool;
+            jedisPoolConfig.setTestOnBorrow(true);
+            jedisPoolConfig.setTestWhileIdle(true);
+            jedisPoolConfig.setTestOnCreate(true);
+            /*JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);*/
+            return jedisPoolConfig;
         }
     }
 

@@ -4,10 +4,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.vincent.service.redisService.ServiceRedisCache;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -22,15 +24,23 @@ public class RedisTest {
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
     private ServiceRedisCache serviceRedisCache;
 
     @Test
     public void testRedis() {
+        //  stringRedisTemplate 插入string 设置了key 和value 序列化，不会乱码
         String key = "demo:01";
         stringRedisTemplate.opsForValue().set(key, "s0fasdfasdfasdf0dlf");
-        stringRedisTemplate.expire(key, 10000, TimeUnit.MILLISECONDS);
-
-
+        stringRedisTemplate.expire(key, 10000, TimeUnit.SECONDS);
+        stringRedisTemplate.opsForList().leftPush(key+":list:str", "aaaa");
+        stringRedisTemplate.opsForList().leftPush(key+":list:str", "bbb");
+        stringRedisTemplate.opsForList().leftPush(key+":list:str", "ccc");
+        // redisTemplate 插入list 和 str 值以hex 显示
+        redisTemplate.opsForList().leftPush(key+":list", Arrays.asList("aaaaa","bbbbbbb","cccccccc"));
+        redisTemplate.opsForList().leftPush(key+":list", Arrays.asList("BBB","CC","DD"));
+        redisTemplate.opsForValue().set("pr","asdfsd");//redisTemplate 设置的value 会乱码
     }
 
     @Test

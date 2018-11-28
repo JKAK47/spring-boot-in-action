@@ -1,7 +1,5 @@
 package org.vincent.common.config;
 
-import net.sf.ehcache.config.CacheConfiguration;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -17,6 +15,10 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 @EnableCaching
 public class EhcacheConfiguration {
+    /** Ehcache 的cacheManager bean 名称 */
+    public static final String EHCACHE_CACHE_MANAGER = "ehCacheCacheManager";
+    /** Ehcache 设定的默认cache 名称 ; 和ehcache 配置文件设置的 cache 名称一致 */
+    public static final String EHCACHE_CACHE_NAME = "demo";
     /**
      * java bean 配置 Ehcache 不使用 xml 配置文件进行配置
      * @return

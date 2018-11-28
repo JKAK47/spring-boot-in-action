@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.vincent.common.config.EhcacheConfiguration;
 import org.vincent.service.ehcacheService.EhcacheService;
 
 /**
@@ -12,7 +13,7 @@ import org.vincent.service.ehcacheService.EhcacheService;
  * Ehcache测试服务类
  */
 @Service
-@CacheConfig(cacheManager = "ehCacheCacheManager",cacheNames = "demo")
+@CacheConfig(cacheManager = EhcacheConfiguration.EHCACHE_CACHE_MANAGER,cacheNames = EhcacheConfiguration.EHCACHE_CACHE_NAME)
 public class EhcacheServiceImpl implements EhcacheService {
     private Logger logger = LoggerFactory.getLogger(EhcacheServiceImpl.class);
     @Override
