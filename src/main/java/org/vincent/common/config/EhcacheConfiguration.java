@@ -35,9 +35,18 @@ public class EhcacheConfiguration {
     }*/
     @Bean(name = "ehcache")
     public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
-        EhCacheManagerFactoryBean cacheBean = new EhCacheManagerFactoryBean();
-        cacheBean.setConfigLocation(new ClassPathResource("ehcache.xml"));
-        return cacheBean;
+        EhCacheManagerFactoryBean cacheManagerFactoryBean = new EhCacheManagerFactoryBean();
+        /**
+         * 获取配置文件资源也可以通过这个方法
+         * URL ehcacheUrl = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX + "cache/ehcache.xml");
+         logger.debug(ehcacheUrl.toString());
+         cacheManagerFactoryBean.setConfigLocation(new UrlResource(ehcacheUrl));
+         */
+        cacheManagerFactoryBean.setConfigLocation(new ClassPathResource("ehcache.xml"));
+        // 给 EhcacheManager 设置名称
+        cacheManagerFactoryBean.setCacheManagerName("ehCacheManager");
+
+        return cacheManagerFactoryBean;
     }
 
     @Bean("ehCacheCacheManager")
