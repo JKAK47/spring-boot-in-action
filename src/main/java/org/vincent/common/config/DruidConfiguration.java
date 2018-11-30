@@ -3,9 +3,10 @@ package org.vincent.common.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import java.sql.SQLException;
+import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -14,12 +15,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
-
 /**
  * Created by PengRong on 2018/11/26.
- * Druid 配置信息，还有一些问题。为啥这个配置需要有作用一定需要引用 log4j 1.2.17 版本的jar包 ，能不映入吗？
+ * Druid 配置信息
+ * @author PengRong
  */
 @Configuration
 public class DruidConfiguration {
@@ -27,27 +26,38 @@ public class DruidConfiguration {
     /** 和 application-xxx.properties 文件中 关于 druid 配置项前缀对应  */
     private static final String DB_PREFIX = "spring.datasource";
 
+    /**
+     *  主要实现WEB监控的配置处理
+     * @return ServletRegistrationBean
+     */
     @Bean
-    public ServletRegistrationBean druidServlet() { // 主要实现WEB监控的配置处理
-        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(
-                new StatViewServlet(), "/druid/*"); // 现在要进行druid监控的配置处理操作
-        servletRegistrationBean.addInitParameter("allow",
-                "127.0.0.1,10.6.70.78"); // 白名单
-        // servletRegistrationBean.addInitParameter("deny", "192.168.1.200"); // 黑名单
-        servletRegistrationBean.addInitParameter("loginUsername", "admin"); // 用户名
-        servletRegistrationBean.addInitParameter("loginPassword", "admin"); // 密码
-        servletRegistrationBean.addInitParameter("resetEnable", "false"); // 是否可以重置数据源
+    public ServletRegistrationBean druidServlet() {
+        logger.debug("init ServletRegistrationBean");
+        // 现在要进行druid监控的配置处理操作
+        ServletRegistrationBean<StatViewServlet> servletRegistrationBean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
+        // 白名单
+        servletRegistrationBean.addInitParameter("allow", "127.0.0.1,10.6.70.78");
+        // 黑名单
+        // servletRegistrationBean.addInitParameter("deny", "192.168.1.200");
+        // 用户名
+        servletRegistrationBean.addInitParameter("loginUsername", "admin");
+        // 密码
+        servletRegistrationBean.addInitParameter("loginPassword", "admin");
+        // 是否可以重置数据源
+        servletRegistrationBean.addInitParameter("resetEnable", "false");
         return servletRegistrationBean ;
     }
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean() ;
+        FilterRegistrationBean<WebStatFilter> filterRegistrationBean = new FilterRegistrationBean<>() ;
         filterRegistrationBean.setFilter(new WebStatFilter());
-        filterRegistrationBean.addUrlPatterns("/*"); // 所有请求进行监控处理
-        filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,/druid");// 忽略不监控的资源
+        // 所有请求进行监控处理
+        filterRegistrationBean.addUrlPatterns("/*");
+        // 忽略不监控的资源
+        filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,/druid");
         return filterRegistrationBean ;
     }
-    //解决 spring.datasource.filters=stat,wall,log4j 无法正常注册进去
+
     @Component
     @ConfigurationProperties(prefix = DB_PREFIX)
     class IDataSourceProperties {
@@ -70,8 +80,12 @@ public class DruidConfiguration {
         private String filters;
         private String connectionProperties;
 
-        @Bean     //声明其为Bean实例
-        @Primary  //在同样的多个 DataSource中，首先使用被该注解 标注的DataSource
+        /**
+         * 声明其为Bean实例
+         * 在同样的多个 DataSource中，首先使用被该注解 标注的DataSource
+         */
+        @Bean
+        @Primary
         public DataSource dataSource() {
             DruidDataSource datasource = new DruidDataSource();
             datasource.setUrl(url);

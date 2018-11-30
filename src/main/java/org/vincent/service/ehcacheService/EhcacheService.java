@@ -5,4 +5,6 @@ package org.vincent.service.ehcacheService;
  */
 public interface EhcacheService {
     public String save(String key);
+    public  String putData(String key);
+    public  void  Evict(String key);
 }

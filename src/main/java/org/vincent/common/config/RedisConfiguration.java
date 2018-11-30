@@ -39,6 +39,8 @@ import java.time.Duration;
 /**
  * Created by PengRong on 2018/11/26.
  * Redis 单机版配置
+ * SpringBoot2.0.5 集成 Redis Config
+ * @author PengRong
  */
 @Configuration
 @EnableCaching
@@ -134,7 +136,8 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
         RedisSerializer stringSerializer = new StringRedisSerializer();
-        redisTemplate.setKeySerializer(stringSerializer);// key 序列化, 必须设置不然key 乱码
+        // key 序列化, 必须设置不然key 乱码
+        redisTemplate.setKeySerializer(stringSerializer);
 
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
@@ -150,15 +153,20 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory factory) {
         StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
         stringRedisTemplate.setConnectionFactory(factory);
-        setSerializer(stringRedisTemplate);//设置value序列化工具
+        //设置value序列化工具
+        setSerializer(stringRedisTemplate);
         RedisSerializer stringSerializer = new StringRedisSerializer();
-        stringRedisTemplate.setKeySerializer(stringSerializer); // key序列化
-        stringRedisTemplate.setHashKeySerializer(stringSerializer); // Hash key序列化
+        // key序列化
+        stringRedisTemplate.setKeySerializer(stringSerializer);
+        // Hash key序列化
+        stringRedisTemplate.setHashKeySerializer(stringSerializer);
         stringRedisTemplate.afterPropertiesSet();
         return stringRedisTemplate;
     }
 
-    /*设置 value 序列化工具*/
+    /**
+     * 设置 value 序列化工具
+     * */
     private void setSerializer(StringRedisTemplate template) {
         @SuppressWarnings({"rawtypes", "unchecked"})
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);

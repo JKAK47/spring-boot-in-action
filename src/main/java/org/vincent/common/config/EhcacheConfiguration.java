@@ -35,6 +35,7 @@ public class EhcacheConfiguration {
     }*/
     @Bean(name = "ehcache")
     public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
+
         EhCacheManagerFactoryBean cacheManagerFactoryBean = new EhCacheManagerFactoryBean();
         /**
          * 获取配置文件资源也可以通过这个方法
