@@ -22,26 +22,45 @@ import org.vincent.service.ehcacheService.EhcacheService;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class EhcacheTest {
-    private Logger logger =LoggerFactory.getLogger(EhcacheTest.class);
+    private Logger logger = LoggerFactory.getLogger(EhcacheTest.class);
     @Autowired
     private EhcacheService ehcacheService;
 
+
     /**
+     * 欺骗缓存框架
+     */
+    @Test
+    public void test() {
+        /**
+         * key 都是一样 sdfd，第一次调用  saveString 方法以 key = sdfd ，将该函数返回值返回并缓存；
+         * 第二次调用  saveint 也是以  key = sdfd  将 缓存，但是因为  saveString 已经缓存了 key = sdfd,value 为字符串类型的缓存对了。 saveint方法将不再调用
+         * 直接将  saveString 方法的返回值 作为返回值，然后发生了类型 从String 到 Integer 强转 的错误。
+         */
+        String value = ehcacheService.saveString("sdfd");
+        Integer integer = ehcacheService.saveint("sdfd");
+    }
+
+    /**
+     * 测试缓存类
      * 获取到 Ehcache 的 CacheManager 包装类，已经被SpringCache 包装 为 EhCacheCacheManager 类
      */
     @Autowired
     @Qualifier(EhcacheConfiguration.EHCACHE_CACHE_MANAGER)
     private CacheManager cacheManager;
+
     @Test
-    public void test() {
+    public void testsave() {
         logger.error("begin ");
-        String value = ehcacheService.save("C024");
+        String value = null;
 
-        value = ehcacheService.save("C024");
+        String key = "C024";
+        String cacheKey = "save" + "C024";
+        value = ehcacheService.save(key);
 
-        value = ehcacheService.save("C024");
+        value = ehcacheService.save(key);
 
-        value = ehcacheService.save("C024");
+        value = ehcacheService.save(key);
         /**
          * 强转 获取到ehcache 的包装类
          */
@@ -55,13 +74,69 @@ public class EhcacheTest {
         // 从缓存里面取值和第一次接口访问产生返回的值对比
         Cache cache = cacheManager.getCache(EhcacheConfiguration.EHCACHE_CACHE_NAME);
         // 第一种方法
-        String temp1 = cache.get("C024",String.class);// 简单直接说明返回值期望数据类型
-        Assert.assertEquals("期望value =1",value,temp1);
+        String temp1 = cache.get(cacheKey, String.class);// 简单直接说明返回值期望数据类型
+        Assert.assertEquals("期望value =1", value, temp1);
         // 第二种方式
-        Cache.ValueWrapper wrapper =cache.get("C024");
-        if (wrapper !=null){
-          String temp2 = (String) wrapper.get();// null 说明 缓存value 可以为 null
-          Assert.assertEquals("期望value =1",value,temp2);
+        Cache.ValueWrapper wrapper = cache.get(cacheKey);
+        if (wrapper != null) {
+            String temp2 = (String) wrapper.get();// null 说明 缓存value 可以为 null
+            Assert.assertEquals("期望value =1", value, temp2);
         }
+
+        /**
+         * 改变key 看是否可以再次执行方法
+         */
+        key = "C024XX";
+        value = ehcacheService.save(key);
+        // 第一种方法
+        temp1 = cache.get("save" + key, String.class);// 简单直接说明返回值期望数据类型
+        Assert.assertEquals("期望value =1", value, temp1);
+        cache.getNativeCache();
+    }
+
+    /**
+     * 测试 CachePut 注解的作用
+     */
+    @Test
+    public void testPut() {
+        String value = null;
+        String cacheKey = "putDataC024";
+        value = ehcacheService.putData("C024");
+        value = ehcacheService.putData("C024");
+        logger.debug(value);/** 获取值 */
+        Cache cache = cacheManager.getCache(EhcacheConfiguration.EHCACHE_CACHE_NAME);
+        String temp = cache.get(cacheKey, String.class);
+        Assert.assertEquals(value, temp);
+
+    }
+
+    /**
+     * 测试 从缓存中 删除缓存案例
+     */
+    @Test
+    public void testEvict() {
+        String key = "asdfasd";
+        String value = null;
+        String cacheKey = "save" + key;
+        /**
+         * 增加缓存
+         */
+        value = ehcacheService.save(key);
+        value = ehcacheService.save(key);
+        value = ehcacheService.save(key);
+        value = ehcacheService.save(key);
+        // 从缓存里面取值和第一次接口访问产生返回的值对比
+        Cache cache = cacheManager.getCache(EhcacheConfiguration.EHCACHE_CACHE_NAME);
+        // 第一种方法
+        String temp1 = cache.get(cacheKey, String.class);// 简单直接说明返回值期望数据类型
+        Assert.assertEquals("期望value =1", value, temp1);
+        /**
+         * 刪除緩存，务必用cacheKey，因为你存储的时候key 并不是用的参数，而是加了方法前缀
+         */
+        ehcacheService.Evict(cacheKey);
+        /*
+        再次去取，为空
+         */
+        temp1 = cache.get(cacheKey, String.class);// 简单直接说明返回值期望数据类型
     }
 }
