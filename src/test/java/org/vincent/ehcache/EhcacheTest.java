@@ -55,7 +55,8 @@ public class EhcacheTest {
         String value = null;
 
         String key = "C024";
-        String cacheKey = "save" + "C024";
+        String cacheKeyPrefix = "org.vincent.service.ehcacheService.impl.EhcacheServiceImpl";
+        String cacheKey =cacheKeyPrefix +key;
         value = ehcacheService.save(key);
 
         value = ehcacheService.save(key);
@@ -89,7 +90,7 @@ public class EhcacheTest {
         key = "C024XX";
         value = ehcacheService.save(key);
         // 第一种方法
-        temp1 = cache.get("save" + key, String.class);// 简单直接说明返回值期望数据类型
+        temp1 = cache.get(cacheKeyPrefix + key, String.class);// 简单直接说明返回值期望数据类型
         Assert.assertEquals("期望value =1", value, temp1);
         cache.getNativeCache();
     }
@@ -98,16 +99,20 @@ public class EhcacheTest {
      * 测试 CachePut 注解的作用
      */
     @Test
-    public void testPut() {
+    public void testPut() throws InterruptedException {
         String value = null;
-        String cacheKey = "putDataC024";
-        value = ehcacheService.putData("C024");
-        value = ehcacheService.putData("C024");
+        String cacheKeyPrefix = "org.vincent.service.ehcacheService.impl.EhcacheServiceImpl";
+        String key="C024";
+        value = ehcacheService.putData(key);
+        value = ehcacheService.putData(key);
         logger.debug(value);/** 获取值 */
         Cache cache = cacheManager.getCache(EhcacheConfiguration.EHCACHE_CACHE_NAME);
-        String temp = cache.get(cacheKey, String.class);
+        /**
+         * 取值需要加key 前缀
+         */
+        Thread.sleep(10000);
+        String temp = cache.get(cacheKeyPrefix+key, String.class);
         Assert.assertEquals(value, temp);
-
     }
 
     /**
@@ -117,7 +122,8 @@ public class EhcacheTest {
     public void testEvict() {
         String key = "asdfasd";
         String value = null;
-        String cacheKey = "save" + key;
+        String cacheKeyPrefix = "org.vincent.service.ehcacheService.impl.EhcacheServiceImpl";
+        String cacheKey = cacheKeyPrefix + key;
         /**
          * 增加缓存
          */
@@ -133,10 +139,12 @@ public class EhcacheTest {
         /**
          * 刪除緩存，务必用cacheKey，因为你存储的时候key 并不是用的参数，而是加了方法前缀
          */
-        ehcacheService.Evict(cacheKey);
+        ehcacheService.Evict(key);
         /*
         再次去取，为空
          */
         temp1 = cache.get(cacheKey, String.class);// 简单直接说明返回值期望数据类型
+        // 判断是否已经从缓存删除了数据
+        Assert.assertNull(temp1);
     }
 }
