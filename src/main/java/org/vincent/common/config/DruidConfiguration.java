@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Created by PengRong on 2018/11/26.
- * Druid 配置信息
+ * Druid 数据库线程池配置信息
  * @author PengRong
  */
 @Configuration

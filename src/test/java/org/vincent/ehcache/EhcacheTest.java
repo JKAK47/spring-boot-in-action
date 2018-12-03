@@ -13,6 +13,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.vincent.common.config.EhcacheConfiguration;
+import org.vincent.dao.model.TbUser;
 import org.vincent.service.ehcacheService.EhcacheService;
 
 /**
@@ -56,7 +57,7 @@ public class EhcacheTest {
 
         String key = "C024";
         String cacheKeyPrefix = "org.vincent.service.ehcacheService.impl.EhcacheServiceImpl";
-        String cacheKey =cacheKeyPrefix +key;
+        String cacheKey = cacheKeyPrefix + key;
         value = ehcacheService.save(key);
 
         value = ehcacheService.save(key);
@@ -102,7 +103,7 @@ public class EhcacheTest {
     public void testPut() throws InterruptedException {
         String value = null;
         String cacheKeyPrefix = "org.vincent.service.ehcacheService.impl.EhcacheServiceImpl";
-        String key="C024";
+        String key = "C024";
         value = ehcacheService.putData(key);
         value = ehcacheService.putData(key);
         logger.debug(value);/** 获取值 */
@@ -111,7 +112,7 @@ public class EhcacheTest {
          * 取值需要加key 前缀
          */
         Thread.sleep(10000);
-        String temp = cache.get(cacheKeyPrefix+key, String.class);
+        String temp = cache.get(cacheKeyPrefix + key, String.class);
         Assert.assertEquals(value, temp);
     }
 
@@ -146,5 +147,22 @@ public class EhcacheTest {
         temp1 = cache.get(cacheKey, String.class);// 简单直接说明返回值期望数据类型
         // 判断是否已经从缓存删除了数据
         Assert.assertNull(temp1);
+    }
+
+    /**
+     * 缓存 对象 TbUser
+     */
+    @Test
+    public void testsaveTbUser() {
+        TbUser user = new TbUser();
+        user.setId(1);
+        user.setUsername("张三");
+        user.setAge(18);
+        String value = ehcacheService.save(user);
+        String temp = ehcacheService.save(user);
+        Assert.assertEquals("不等",value,temp);
+        Cache cache = cacheManager.getCache(EhcacheConfiguration.EHCACHE_CACHE_NAME);
+        String cacheValue = cache.get("org.vincent.service.ehcacheService.impl.EhcacheServiceImpl"+user.getUsername()+user.getAge()+user.getId(),String.class);
+        Assert.assertEquals("",value,cacheValue);
     }
 }

@@ -2,13 +2,19 @@ package org.vincent.service.ehcacheService.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.vincent.common.config.EhcacheConfiguration;
+import org.vincent.dao.impl.TbUserMapper;
+import org.vincent.dao.model.TbUser;
+import org.vincent.dao.model.TbUserExample;
 import org.vincent.service.ehcacheService.EhcacheService;
+
+import java.util.List;
 
 /**
  * Created by PengRong on 2018/11/27.
@@ -19,6 +25,8 @@ import org.vincent.service.ehcacheService.EhcacheService;
 public class EhcacheServiceImpl implements EhcacheService {
     private Logger logger = LoggerFactory.getLogger(EhcacheServiceImpl.class);
 
+    @Autowired
+    private TbUserMapper tbUserMapper;
     /**
      * 定义一个方法用于产生缓存key前缀保证key的唯一性 ，勿作他用
      * 必须保证方法是用  public 修饰的，
@@ -36,6 +44,24 @@ public class EhcacheServiceImpl implements EhcacheService {
         EhcacheServiceImpl b = new EhcacheServiceImpl();
         System.out.println(b.getPrefix());
 
+    }
+
+    /**
+     * 缓存一个对象，同时通过
+     * @param user
+     * @return
+     */
+    @Cacheable(key = "#root.target.getPrefix()+ #user.username + #user.age + #user.id")
+    @Override
+    public String save(TbUser user) {
+        TbUser temp = null;
+        TbUserExample example=new  TbUserExample();
+        example.createCriteria().andAgeEqualTo(user.getAge()).andUsernameEqualTo(user.getUsername()).andIdEqualTo(user.getId());
+        List<TbUser> tbUsers = tbUserMapper.selectByExample(example);
+        if (tbUsers!=null && tbUsers.size()>0){
+              temp = tbUsers.get(0);
+        }
+        return temp.toString();
     }
 
     /**

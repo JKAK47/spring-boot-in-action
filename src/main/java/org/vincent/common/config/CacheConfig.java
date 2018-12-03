@@ -18,7 +18,8 @@ import java.util.List;
 
 /**
  * Created by PengRong on 2018/11/27.
- * 统一 redis 和ehcache 两者缓存框架
+ * 统一 redis 和ehcache 两者缓存框架,
+ * 其他的缓存框架如果需要集成在一次也是需要在这个集成进来
  */
 @Configuration
 @EnableCaching
