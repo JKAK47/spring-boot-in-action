@@ -27,6 +27,7 @@ import java.util.Objects;
 /**
  * Created by PengRong on 2018/12/5.
  * 用于Ehcache  cache监控 ,将信息以Json 格式Export 给页面
+ * https://blog.csdn.net/wiker_yong/article/details/52068420
  */
 @RestController
 @RequestMapping("/ehcache")
