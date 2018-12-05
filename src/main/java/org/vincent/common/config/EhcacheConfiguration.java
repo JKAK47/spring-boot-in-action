@@ -2,6 +2,7 @@ package org.vincent.common.config;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.config.CacheConfiguration;
+import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -47,6 +48,7 @@ public class EhcacheConfiguration {
         cacheConfiguration.setEternal(false);
         /** 设置 内存存储达到设置元素个数后是否持久化到硬盘 */
         cacheConfiguration.setOverflowToDisk(false);
+
         /**
          * timeToIdleSeconds : 表示该缓存不被访问空闲多久
          * timeToLiveSeconds : 表示该缓存项可以存活的最长时间
@@ -57,14 +59,15 @@ public class EhcacheConfiguration {
         cacheConfiguration.setTimeToLiveSeconds(60 * 60 * 24);
         /** 设置 磁盘失效线程运行时间间隔，默认为120秒 */
         cacheConfiguration.setDiskExpiryThreadIntervalSeconds(120);
-        /** 设置cache 过期策略 */
-        cacheConfiguration.setMemoryStoreEvictionPolicy("LRU");
+        /** 设置cache 过期策略 LRU LFU FIFO */
+        cacheConfiguration.setMemoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LRU.toString());
         cacheConfiguration.setTransactionalMode("OFF");
         /**
          * 设置Ehcache 的配置类, 并设置CacheManager Name
          * */
         net.sf.ehcache.config.Configuration config = new net.sf.ehcache.config.Configuration()
                 .name(EHCACHE_CACHE_MANAGER).cache(cacheConfiguration);
+
         return net.sf.ehcache.CacheManager.newInstance(config);
     }
 

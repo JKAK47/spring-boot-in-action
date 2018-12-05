@@ -39,11 +39,12 @@ public class UserController {
         try {
 
             TbUser user = userService.selectByPrimaryKey(id);
-            r.setResult(user);
-            r.setStatus("OK");
+            r.getResult().put("user",user);
+
+            r.setMsg("OK");
         } catch (Exception e) {
-            r.setResult(e.getClass().getName() + ":" + e.getMessage());
-            r.setStatus("error");
+
+            r.setMsg("error");
             e.printStackTrace();
         }
         logger.debug(r.toString());
@@ -65,11 +66,12 @@ public class UserController {
             TbUserExample example=new TbUserExample();
             example.createCriteria();
             List<TbUser> users = userService.selectByExample(example);
-            r.setResult(users);
-            r.setStatus("ok");
+            r.getResult().put("users",users);
+
+            r.setMsg("ok");
         } catch (Exception e) {
-            r.setResult(e.getClass().getName() + ":" + e.getMessage());
-            r.setStatus("error");
+
+            r.setMsg("error");
             e.printStackTrace();
         }
         return ResponseEntity.ok(r);
@@ -90,15 +92,16 @@ public class UserController {
             tbUser.setUsername(user.getUsername());
             int orderId = userService.insert(tbUser);
             if (orderId < 0) {
-                r.setResult(orderId);
-                r.setStatus("fail ");
+                r.getResult().put("orderId",orderId);
+
+                r.setMsg("fail ");
             } else {
-                r.setResult(orderId);
-                r.setStatus("ok");
+                r.getResult().put("orderId",orderId);
+
+                r.setMsg("ok");
             }
         } catch (Exception e) {
-            r.setResult(e.getClass().getName() + ":" + e.getMessage());
-            r.setStatus("error");
+            r.setMsg("error");
 
             e.printStackTrace();
         }
@@ -116,15 +119,17 @@ public class UserController {
         try {
             int ret = userService.deleteByPrimaryKey(id);
             if (ret < 0) {
-                r.setResult(ret);
-                r.setStatus(" fail");
+                r.getResult().put("ret",ret);
+
+                r.setMsg(" fail");
             } else {
-                r.setResult(ret);
-                r.setStatus("ok");
+                r.getResult().put("ret",ret);
+
+                r.setMsg("ok");
             }
         } catch (Exception e) {
-            r.setResult(e.getClass().getName() + ":" + e.getMessage());
-            r.setStatus("error");
+
+            r.setMsg("error");
 
             e.printStackTrace();
         }
@@ -148,15 +153,16 @@ public class UserController {
 
             int ret = userService.updateByPrimaryKey(tbUser);
             if (ret < 0) {
-                r.setResult(ret+"");
-                r.setStatus("fail");
+                r.getResult().put("ret",ret);
+
+                r.setMsg("fail");
             } else {
-                r.setResult(ret);
-                r.setStatus("ok");
+                r.getResult().put("ret",ret);
+                r.setMsg("ok");
             }
         } catch (Exception e) {
-            r.setResult(e.getClass().getName() + ":" + e.getMessage());
-            r.setStatus("error");
+
+            r.setMsg("error");
 
             e.printStackTrace();
         }
