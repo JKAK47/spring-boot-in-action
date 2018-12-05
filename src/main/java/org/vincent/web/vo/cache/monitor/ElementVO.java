@@ -5,7 +5,7 @@ package org.vincent.web.vo.cache.monitor;
  * @package org.vincent.web.vo.cache.monitor
  * @date 2018/12/6 - 1:16
  * @ProjectName spring-boot-in-action
- * @Description: TODO
+ * @Description: 缓存每个元素项
  */
 public class ElementVO {
     public ElementVO() {

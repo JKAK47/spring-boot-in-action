@@ -7,7 +7,7 @@ import java.util.List;
  * @package org.vincent.web.vo.cache.monitor
  * @date 2018/12/6 - 1:14
  * @ProjectName spring-boot-in-action
- * @Description: 关于一个Cache 相关的信息
+ * @Description: 关于一个Cache 相关的信息，从属于CacheManager
  */
 public class CacheInfoVO {
     public CacheInfoVO() {
