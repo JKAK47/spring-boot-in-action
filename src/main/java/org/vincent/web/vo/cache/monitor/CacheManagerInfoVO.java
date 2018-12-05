@@ -7,7 +7,7 @@ import java.util.Collection;
  * Created by PengRong on 2018/12/5.
  * 返回给页面的 CacheManagerVo 页面显示对象
  */
-public class CacheManagerVO {
+public class CacheManagerInfoVO {
     /**
      * cacheManager Name
      */
@@ -17,7 +17,7 @@ public class CacheManagerVO {
      */
     private Collection<String> cacheNames;
 
-    public CacheManagerVO() {
+    public CacheManagerInfoVO() {
     }
 
     public String getCacheManagerName() {

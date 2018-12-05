@@ -86,7 +86,7 @@ public class EhcacheConfiguration {
          * cacheManagerFactoryBean.setConfigLocation(new UrlResource(ehcacheUrl));
          */
         cacheManagerFactoryBean.setConfigLocation(new ClassPathResource("ehcache.xml"));
-        // 给 EhcacheManager 设置名称
+        // 给 EhcacheManagerVO 设置名称
         cacheManagerFactoryBean.setCacheManagerName("ehCacheManager");
 
         return cacheManagerFactoryBean;
