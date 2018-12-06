@@ -54,6 +54,7 @@
             <version>1.2.3</version><!--$NO-MVN-MAN-VER$ -->
         </dependency>
         <!-- logback stop -->
+
         <!-- test begin -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -78,6 +79,7 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
         <!--
+        SpringBoot2.0.x + Mybatis 集成 + Druid 数据库连接池集成
          mysql + mybatis-boot
          Spring-Mybatis  必须制定版本号，
             往常我们使用springboot之所以不需要指定版本号，是因为我们引入的Maven Parent 中指定了SpringBoot的依赖构件版本号
@@ -98,18 +100,9 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.1.10</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mybatis.generator/mybatis-generator-core
-            mybatis generator 生成数据bean dao代码框架
-         -->
-       <!-- <dependency>
-            <groupId>org.mybatis.generator</groupId>
-            <artifactId>mybatis-generator-core</artifactId>
-            <version>1.3.7</version>
-        </dependency>-->
-
         <!-- mysql + mybatis-boot -->
 
-        <!-- swagger 2 begin -->
+        <!-- SpringBoot2.0.x + swagger 2 集成 begin -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
@@ -121,9 +114,10 @@
             <version>${swagger2.version}</version>
         </dependency>
         <!-- swagger 2 stop -->
+
         <!-- cache begin -->
         <!-- redis begin -->
-        <!-- 整合redis -->
+        <!-- SpringBoot2.0.x + 整合redis  -->
         <!-- 注意：1.5版本的依赖和2.0的依赖不一样，注意看哦 1.5我记得名字里面应该没有“data”, 2.0必须是“spring-boot-starter-data-redis” 这个才行-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -154,16 +148,6 @@
             <artifactId>commons-pool2</artifactId>
             <version>2.5.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok
-            用于在编译期创建一些setter getter 方法
-         -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.2</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- redis stop -->
         <!-- encache begin -->
         <dependency>
@@ -178,6 +162,15 @@
         <!-- encache stop  -->
         <!-- cache stop -->
 
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok
+            用于在编译期创建一些setter getter 方法
+         -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.2</version>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 

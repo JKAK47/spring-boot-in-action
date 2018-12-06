@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Created by PengRong on 2018/9/28.
  * Swagger2 配置 类
+ * 访问链接： http://localhost:6789/spring-boot-in-action/swagger-ui.html
  */
 @Configuration
 @EnableSwagger2
@@ -41,6 +42,7 @@ public class Swagger2 {
             return new Docket(DocumentationType.SWAGGER_2)
                     .apiInfo(apiInfo())
                     .select()
+                    /** 指定swagger2 测试package Controller 所在路径 */
                     .apis(RequestHandlerSelectors.basePackage("org.vincent.web.controller"))
                     .paths(PathSelectors.any())
                     .build();
@@ -54,6 +56,10 @@ public class Swagger2 {
 
     }
 
+    /**
+     * swaggerOpen =true 时候 内容
+     * @return
+     */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title(new String(title.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8))
@@ -63,6 +69,10 @@ public class Swagger2 {
                 .build();
     }
 
+    /**
+     * swaggerOpen =false 时候 内容
+     * @return
+     */
     private ApiInfo apiInfoOnline() {
         return new ApiInfoBuilder()
                 .title("")
